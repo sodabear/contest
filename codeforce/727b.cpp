@@ -1,60 +1,71 @@
 #include <iostream>
-#include <stdlib.h> 
 #include <string>
 #include <math.h> 
-#include <ctype.h>
 #include <vector>
+#include <cstdlib>
 using namespace std;
-string k[1001];
+string str;
 vector<float> ans;
-vector<int> in;
-vector<int> cent;	
+vector<int> v1;
+vector<float> v2;	
 int main(){
-	 cin >> k;
-	 int flag = 0; //change when first meet a char
-	 int len = k.size();
-	 
-	 for(int i =0; i < len){
-		 // second time meet char but it is first char 	
-		 if(isalpha(k[i]) && flag ==1 && k[i] != "."){
-		 //turn two int vector to a float	 
-			int m = 0;
-			int count = 0;
-			for(int n:in){
-				m = n + pow(10,count)*n;
-				count++;
-			}
-			int c = cent[0]*10 + cent[1];
-			float ce = (float)c/(float)100;
-			float result = (float)m + ce;
-			ans.push_back(result);
-			in.clear();
-			cent.clear();
-			flag = 0;		
-		 }	 
-		 //digit
-		 if(isdigit[k[i]]){
-			in.push_back(atoi(k[i]));
-			flag = 1;		
-		 }
-		 // dot
-		 if(k[i] == "." && i+3 < len && isdigit(k[i+3])){
-			 in.push_back(atoi(k[i+1]))
-			 in.push_back(atoi(k[i+2]))
-			 in.push_back(atoi(k[i+3]))
-			 i = i +4;
-			 flag = 1;
-			 continue; 
-		 }else{
-		 	cent.push_back(atoi(k[i+1]))
-			cent.push_back(atoi(k[i+2]))
-			i = i +3;
-		 	flag = 1;
-			continue; 	
-		 }	 
-		 i++;
-	}
-		 		
+	 cin >> str;
+	 int flag = 0;
+	 int len = str.size() ;
+	 for(auto c : str){
+		if(isalpha(c) && flag == 1){
+			v1.push_back(-1); //indicate space
+			flag = 0;
+		}	
+		if(isdigit(c) || ispunct(c)){			
+		   v1.push_back(c - '0');
+		   flag = 1;
+		}
+				
+	 }
+	 v1.push_back(-1);	 
+	 //chipsy48.32televizor12.390 gave 48-232-4912-2390 || -2 is dot -49 is space
+	
+	string in ="";
+	int ans;
+	float ans1;	
+	int cent;	
+	for(int i =0; i < len ;){
+		
+		//with cent
+		if(v1[i] == -2 && i+3 < len && v1[i+3] == -1 ){
+			cent = v1[i+1]*10 + v1[i+2];
+			ans = atoi(in.c_str()) ;
+			ans1 = (float)ans+ (float)cent/(float)100;
+			v2.push_back(ans1);
+			cent =0; 
+			ans =0;
+			ans1 = 0;
+			in = "";
+			i = i + 4;
+			continue;
+		}
+		//without cent
+		if(v1[i] == -1){
+			ans = atoi(in.c_str());
+			v2.push_back((float)ans);
+			ans = 0;
+			in = "";
+		}	
+		// not equal -2 and -1
+		if(v1[i] !=-2 && v1[i] != -1)
+			in = in + to_string(v1[i]);
+		i++;
+		
+	} 
+	//for(auto n : v1){
+	//	cout<< n <<endl;	
+	//}	
+	float fin = 0.0;
+	for(auto n : v2)
+		fin += n;
+	cout<<fin<<endl;	
+	return 0;	 		
 	 
 }	 
 
